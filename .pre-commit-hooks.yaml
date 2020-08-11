@@ -1,0 +1,8 @@
+-   id: check-rcloud-version
+    name: Check rCloud Version
+    description: This hook checks if a new version exists and overwrites some file.
+    entry: pre_commit_hooks/check_rcloud_version
+    language: script
+    stages: [push]
+    #types: [python]
+    #stages: [commit, push, manual]

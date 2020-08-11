@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+# This hook replaces easily all related files where the rCloud version
+# is mentioned.
+# Date: 2020-08-11
+# Author: Martina Rath
+# Email: martina.rath@r-it.at
+
+set -o pipefail
+
+WORKDIR=$(pwd)
+VERSION_FILE=VERSION
+# Check the branch name
+BRANCH_NAME=$(git --git-dir "${WORKDIR}/.git" branch | sed -n -e 's/^\* \(.*\)/\1/p')
+# Get only the version number of the branch
+NEW_VERSION=${BRANCH_NAME#*rCloud}
+PREV_VERSION=$(cat ${VERSION_FILE})
+
+# Check if the branch name is called rCloudx.x.x
+if ! echo "${BRANCH_NAME}" | grep -Eq "^rCloud[0-9]+\.[0-9]+\.[0-9]+$"; then
+    echo "No branch with naming rCloudx.x.x found!"
+    exit 0
+fi
+
+# Check if the VERSION_FILE exists and is not empty
+if [ ! -f ${VERSION_FILE} ]  || [ ! -s ${VERSION_FILE} ]
+then
+    echo "Filename 'VERSION' not found OR is empty!"
+    exit 0
+fi
+
+# Check if the old version is higher than the new one
+if [ $(echo ${PREV_VERSION} | sed s'/\.//g') -gt $(echo ${NEW_VERSION} | sed s'/\.//g') ]; then
+    echo "Old version (${PREV_VERSION}) can't be higher than the new version (${NEW_VERSION})!"
+    exit 0
+fi
+
+# Check if the version is the same
+if [ "${PREV_VERSION}" == "${NEW_VERSION}" ]; then
+    echo "Skip - version is the same!"
+    exit 0
+fi
+
+# Check if the templates dir exists
+if [ ! -d templates ]; then
+    echo "Directory templates doesn't exist!"
+    exit 0
+fi
+
+#echo "Replaced version $PREV_VERSION with $NEW_VERSION for those files:"
+echo "Check the changes and add them if you are satisfied!"
+echo "  git add -u"
+echo "Title for the commit message:"
+echo "-------------------------------------------------"
+echo "Bump rCloud release to version ${NEW_VERSION}"
+echo "-------------------------------------------------"
+echo "Push the changes:"
+echo "  git push origin ${BRANCH_NAME}"
+echo
+for file in $(grep -rl "Default: ${PREV_VERSION}" templates/)
+do
+    sed -i "s/Default: ${PREV_VERSION}/Default: ${NEW_VERSION}/" $file
+    echo "- ${file}"
+done
+# Write new version to VERSION file
+echo "${NEW_VERSION}" > "${VERSION_FILE}"
+echo "- ${VERSION_FILE}"
+# We could automate that but this would be unseen in the pre-commit,
+# hence it makes not sense
+# git add -u
+# git commit -n -m "Bump rCloud release to version ${NEW_VERSION}"
