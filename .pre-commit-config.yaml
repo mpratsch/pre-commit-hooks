@@ -1,0 +1,5 @@
+repos:
+-   repo: https://github.com/mpratsch/pre-commit-hooks
+    rev: master
+    hooks:
+    - id: check-rcloud-version
