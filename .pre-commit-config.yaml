@@ -1,5 +1,7 @@
-repos:
--   repo: https://github.com/mpratsch/pre-commit-hooks
-    rev: master
+repos
+-   repo: https://github.com/mpratsch/pre-commit-hooks.git
+    rev: 1.0.0
     hooks:
     - id: check-rcloud-version
+      stages: [post-checkout]
+      always_run: true:
