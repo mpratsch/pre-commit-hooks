@@ -48,13 +48,13 @@ if [ ! -d templates ]; then
 fi
 
 #echo "Replaced version $PREV_VERSION with $NEW_VERSION for those files:"
-echo "Check the changes and add them if you are satisfied!"
+echo "# Check the changes and add them if you are satisfied!"
 echo "  git add -u"
-echo "Title for the commit message:"
-echo "-------------------------------------------------"
-echo "DOCUMENTATION: Bump rCloud release to version ${NEW_VERSION}"
-echo "-------------------------------------------------"
-echo "Push the changes:"
+echo "# Title for the commit message:"
+echo "#-------------------------------------------------"
+echo "git commit -m \"DOCUMENTATION: Bump rCloud release to version ${NEW_VERSION}\""
+echo "#-------------------------------------------------"
+echo "#Push the changes:"
 echo "  git push origin ${BRANCH_NAME}"
 echo
 for file in $(grep -rl "Default: ${PREV_VERSION}" templates/)
