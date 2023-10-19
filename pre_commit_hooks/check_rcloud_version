@@ -11,7 +11,7 @@ set -o pipefail
 WORKDIR=$(pwd)
 VERSION_FILE=VERSION
 # Check the branch name
-BRANCH_NAME=$(git --git-dir "${WORKDIR}/.git" branch | sed -ine 's/^\* \(.*\)/\1/p')
+BRANCH_NAME=$(git --git-dir "${WORKDIR}/.git" branch | sed -ne 's/^\* \(.*\)/\1/p')
 # Get only the version number of the branch
 NEW_VERSION=${BRANCH_NAME#*rCloud}
 PREV_VERSION=$(cat ${VERSION_FILE})
