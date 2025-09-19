@@ -4,4 +4,4 @@ repos
     hooks:
     - id: check-rcloud-version
       stages: [post-checkout]
-      always_run: true:
+      always_run: true
