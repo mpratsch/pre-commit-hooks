@@ -61,7 +61,8 @@ echo "  git push origin ${BRANCH_NAME}"
 echo
 for file in $(grep -rl "Default: ${PREV_VERSION}" templates/)
 do
-    sed -ie  "s/Default: ${PREV_VERSION}/Default: ${NEW_VERSION}/" $file
+    # Don't create a backup file
+    sed -i '' -e  "s/Default: ${PREV_VERSION}/Default: ${NEW_VERSION}/" $file
     echo "- ${file}"
 done
 # Write new version to VERSION file
