@@ -16,6 +16,15 @@ BRANCH_NAME=$(git --git-dir "${WORKDIR}/.git" branch | sed -ne 's/^\* \(.*\)/\1/
 NEW_VERSION=${BRANCH_NAME#*rCloud}
 PREV_VERSION=$(cat ${VERSION_FILE})
 
+# A hack to solve the sed issue between Darwin and Linux
+sedi() {
+  case "$(uname -s)" in
+    Darwin) sed -i '' "$@" ;;
+    Linux)  sed -i "$@" ;;
+    *)      echo "Unsupported OS: $(uname -s)" >&2; return 1 ;;
+  esac
+}
+
 # Check if the branch name is called rCloudx.x.x
 if ! echo "${BRANCH_NAME}" | grep -Eq "^rCloud[0-9]+\.[0-9]+\.[0-9]+$"; then
     echo "No branch with naming rCloudx.x.x found!"
@@ -47,6 +56,9 @@ if [ ! -d templates ]; then
     exit 0
 fi
 
+
+
+
 #echo "Replaced version $PREV_VERSION with $NEW_VERSION for those files:"
 echo "# Check the changes and add them if you are satisfied!"
 echo "  git add -u"
@@ -62,7 +74,7 @@ echo
 for file in $(grep -rl "Default: ${PREV_VERSION}" templates/)
 do
     # Don't create a backup file
-    sed -i '' -e  "s/Default: ${PREV_VERSION}/Default: ${NEW_VERSION}/" $file
+    sedi -e  "s/Default: ${PREV_VERSION}/Default: ${NEW_VERSION}/" $file
     echo "- ${file}"
 done
 # Write new version to VERSION file
