@@ -92,5 +92,8 @@ git commit --no-verify -m "chore(release): bump rCloud version to ${NEW_VERSION}
 echo
 echo "All changes have been committed."
 echo
+echo "If the commit command failed, do this:"
+echo "  git commit --no-verify -m \"chore(release): bump rCloud version to ${NEW_VERSION}\""
+echo
 echo "# Push the changes:"
 echo "  git push origin ${BRANCH_NAME}"
