@@ -86,13 +86,14 @@ done
 echo "${NEW_VERSION}" > "${VERSION_FILE}"
 echo "- ${VERSION_FILE}"
 
-# Stage the changed files
+# Stage and commit the changed files
 git add -u
+git commit --no-verify -m "chore(release): bump rCloud version to ${NEW_VERSION}"
 echo
-echo "All changes have been staged (git add -u)."
+echo "All changes have been committed."
 echo
-echo "# Commit the changes:"
-echo "  git commit -m \"chore(release): bump rCloud version to ${NEW_VERSION}\""
+echo "If the commit command failed, do this:"
+echo "  git commit --no-verify -m \"chore(release): bump rCloud version to ${NEW_VERSION}\""
 echo
 echo "# Push the changes:"
 echo "  git push origin ${BRANCH_NAME}"
