@@ -75,18 +75,7 @@ fi
 
 
 
-#echo "Replaced version $PREV_VERSION with $NEW_VERSION for those files:"
-echo "# Check the changes and add them if you are satisfied!"
-echo "  git add -u"
-echo
-echo "# Title for the commit message:"
-echo "#-------------------------------------------------"
-echo "git commit -m \"DOCUMENTATION: Bump rCloud release to version ${NEW_VERSION}\""
-echo "#-------------------------------------------------"
-echo
-echo "# Push the changes:"
-echo "  git push origin ${BRANCH_NAME}"
-echo
+echo "Replaced version ${PREV_VERSION} with ${NEW_VERSION} in these files:"
 for file in $(grep -rl "Default: ${PREV_VERSION}" templates/)
 do
     # Don't create a backup file
@@ -96,7 +85,14 @@ done
 # Write new version to VERSION file
 echo "${NEW_VERSION}" > "${VERSION_FILE}"
 echo "- ${VERSION_FILE}"
-# We could automate that but this would be unseen in the pre-commit,
-# hence it makes not sense
-# git add -u
-# git commit -n -m "Bump rCloud release to version ${NEW_VERSION}"
+
+# Stage the changed files
+git add -u
+echo
+echo "All changes have been staged (git add -u)."
+echo
+echo "# Commit the changes:"
+echo "  git commit -m \"chore(release): bump rCloud version to ${NEW_VERSION}\""
+echo
+echo "# Push the changes:"
+echo "  git push origin ${BRANCH_NAME}"
