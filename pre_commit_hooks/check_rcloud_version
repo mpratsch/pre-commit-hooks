@@ -3,8 +3,9 @@
 # This hook replaces easily all related files where the rCloud version
 # is mentioned.
 # Date: 2020-08-11
+# Update: 2026-09-18
 # Author: Martina Rath
-# Email: martina.rath@r-it.at
+# Email: mpratscher@gmail.com
 
 set -o pipefail
 
@@ -38,8 +39,23 @@ then
     exit 0
 fi
 
+# Compare two semantic versions component-wise.
+# Returns 0 if $1 is greater than $2, 1 otherwise.
+version_gt() {
+  local IFS=.
+  local i a=($1) b=($2)
+  for ((i = 0; i < 3; i++)); do
+    if (( ${a[i]:-0} > ${b[i]:-0} )); then
+      return 0
+    elif (( ${a[i]:-0} < ${b[i]:-0} )); then
+      return 1
+    fi
+  done
+  return 1
+}
+
 # Check if the old version is higher than the new one
-if [ $(echo ${PREV_VERSION} | sed -e  s'/\.//g') -gt $(echo ${NEW_VERSION} | sed -e  s'/\.//g') ]; then
+if version_gt "${PREV_VERSION}" "${NEW_VERSION}"; then
     echo "Old version (${PREV_VERSION}) can't be higher than the new version (${NEW_VERSION})!"
     exit 0
 fi
